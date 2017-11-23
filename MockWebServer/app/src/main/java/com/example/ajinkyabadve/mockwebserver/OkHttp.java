@@ -13,6 +13,7 @@ public abstract class OkHttp {
 
     public static OkHttpClient getInstance() {
         if (instance == null) {
+            OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
             instance = new OkHttpClient.Builder()
                     .readTimeout(1, TimeUnit.SECONDS)
                     .connectTimeout(1, TimeUnit.SECONDS)

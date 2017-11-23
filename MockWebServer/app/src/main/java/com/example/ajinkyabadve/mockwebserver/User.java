@@ -7,4 +7,12 @@ package com.example.ajinkyabadve.mockwebserver;
 public class User {
     public String login;
     public int followers;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "login='" + login + '\'' +
+                ", followers=" + followers +
+                '}';
+    }
 }
