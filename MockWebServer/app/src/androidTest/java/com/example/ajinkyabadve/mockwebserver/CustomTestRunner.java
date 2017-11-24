@@ -5,13 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.test.runner.AndroidJUnitRunner;
 
-import io.appflate.restmock.android.RESTMockTestRunner;
-
 /**
  * Created by ajinkyabadve on 21/11/17.
  */
 
-public class CustomTestRunner extends RESTMockTestRunner {
+public class CustomTestRunner extends AndroidJUnitRunner {
     @Override
     public void onCreate(Bundle arguments) {
         super.onCreate(arguments);
