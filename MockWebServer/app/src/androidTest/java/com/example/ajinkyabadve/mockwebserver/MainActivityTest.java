@@ -7,22 +7,22 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.concurrent.TimeUnit;
-
+import io.appflate.restmock.RESTMockServer;
+import io.appflate.restmock.RequestsVerifier;
 import okhttp3.mockwebserver.MockResponse;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static io.appflate.restmock.utils.RequestMatchers.pathEndsWith;
+import static io.appflate.restmock.utils.RequestMatchers.pathStartsWith;
 
 
 /**
  * Created by ajinkyabadve on 21/11/17.
  */
 public class MainActivityTest {
-    private static final String OCTOCAT_BODY = "{ \"login\" : \"octocat\", \"followers\" : 1500 }";
-
     @Rule
     public ActivityTestRule<MainActivity> activityRule
             = new ActivityTestRule<>(MainActivity.class, true, false);
@@ -30,56 +30,32 @@ public class MainActivityTest {
     @Rule
     public OkHttpIdlingResourceRule okHttpIdlingResourceRule = new OkHttpIdlingResourceRule();
 
-    @Rule
-    public MockWebServerRule mockWebServerRule = new MockWebServerRule();
-
     @Before
-    public void setBaseUrl() {
-        TestDemoAppClass app = (TestDemoAppClass)
-                InstrumentationRegistry.getTargetContext().getApplicationContext();
-        app.setBaseUrl(mockWebServerRule.server.url("/").toString());
+    public void reset() {
+        RESTMockServer.reset();
     }
 
     @Test
     public void followers() {
-        mockWebServerRule.server.enqueue(new MockResponse().setBody(OCTOCAT_BODY));
+        RESTMockServer.whenGET(pathEndsWith("octocat"))
+                .thenReturnFile("users/octocat.json");
 
         activityRule.launchActivity(null);
 
         onView(withId(R.id.followers))
                 .check(matches(withText("octocat: 1500")));
+
+        RequestsVerifier.verifyGET(pathStartsWith("/users/octocat")).invoked();
     }
 
     @Test
     public void status404() {
-        mockWebServerRule.server.enqueue(new MockResponse().setResponseCode(404));
+        RESTMockServer.whenGET(pathEndsWith("octocat"))
+                .thenReturnEmpty(404);
 
         activityRule.launchActivity(null);
 
         onView(withId(R.id.followers))
                 .check(matches(withText("404")));
     }
-
-    @Test
-    public void malformedJson() {
-        mockWebServerRule.server.enqueue(new MockResponse().setBody("Jason"));
-
-        activityRule.launchActivity(null);
-
-        onView(withId(R.id.followers))
-                .check(matches(withText("JsonEncodingException")));
-    }
-
-    @Test
-    public void timeout() {
-        mockWebServerRule.server.enqueue(
-                new MockResponse().setBody(OCTOCAT_BODY).throttleBody(1, 1, TimeUnit.SECONDS));
-
-        activityRule.launchActivity(null);
-
-        onView(withId(R.id.followers))
-                .check(matches(withText("SocketTimeoutException")));
-    }
-
-
 }
