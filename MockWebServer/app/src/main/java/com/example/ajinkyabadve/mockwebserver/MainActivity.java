@@ -48,9 +48,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        showFollowers(service, "octocat", R.id.followers_1);
-        showFollowers(service, "swankjesse", R.id.followers_2);
-        showFollowers(service, "chiuki", R.id.followers_3);
+        showFollowers(service, "octocat", R.id.followers);
     }
 
     private void showFollowers(GitHubService service, String login, @IdRes int textViewId) {

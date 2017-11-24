@@ -21,6 +21,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  * Created by ajinkyabadve on 21/11/17.
  */
 public class MainActivityTest {
+    private static final String OCTOCAT_BODY = "{ \"login\" : \"octocat\", \"followers\" : 1500 }";
+
     @Rule
     public ActivityTestRule<MainActivity> activityRule
             = new ActivityTestRule<>(MainActivity.class, true, false);
@@ -40,26 +42,11 @@ public class MainActivityTest {
 
     @Test
     public void followers() {
-        Dispatcher dispatcher = new Dispatcher() {
-            @Override
-            public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
-                String path = request.getPath();
-                String[] parts = path.split("/");
-                String username = parts[parts.length - 1];
-                return new MockResponse().setBody(
-                        "{ \"login\" : \"" + username + "\", \"followers\" : " + username.length() + " }"
-                );
-            }
-        };
-        mockWebServerRule.server.setDispatcher(dispatcher);
+        mockWebServerRule.server.enqueue(new MockResponse().setBody(OCTOCAT_BODY));
 
         activityRule.launchActivity(null);
 
-        onView(withId(R.id.followers_1))
-                .check(matches(withText("octocat: 7")));
-        onView(withId(R.id.followers_2))
-                .check(matches(withText("swankjesse: 10")));
-        onView(withId(R.id.followers_3))
-                .check(matches(withText("chiuki: 6")));
+        onView(withId(R.id.followers))
+                .check(matches(withText("octocat: 1500")));
     }
 }
