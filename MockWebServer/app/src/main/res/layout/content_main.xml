@@ -10,7 +10,21 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
-        android:id="@+id/followers"
+        android:id="@+id/followers_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:typeface="monospace" />
+
+    <TextView
+        android:id="@+id/followers_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:typeface="monospace" />
+
+    <TextView
+        android:id="@+id/followers_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"

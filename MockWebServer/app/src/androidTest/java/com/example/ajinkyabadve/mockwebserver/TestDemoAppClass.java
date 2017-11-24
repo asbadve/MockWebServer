@@ -1,7 +1,5 @@
 package com.example.ajinkyabadve.mockwebserver;
 
-import io.appflate.restmock.RESTMockServer;
-
 /**
  * Created by ajinkyabadve on 21/11/17.
  */
@@ -11,7 +9,7 @@ public class TestDemoAppClass extends AppClass {
 
     @Override
     public String getBaseUrl() {
-        return RESTMockServer.getUrl();
+        return baseUrl;
     }
 
 
