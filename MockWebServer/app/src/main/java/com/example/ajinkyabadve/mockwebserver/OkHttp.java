@@ -1,8 +1,12 @@
 package com.example.ajinkyabadve.mockwebserver;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
+
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.CertificatePinner;
+import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 
 /**
@@ -12,12 +16,20 @@ import okhttp3.OkHttpClient;
 public abstract class OkHttp {
     private static OkHttpClient instance = null;
 
-    public static OkHttpClient getInstance() {
+    public static OkHttpClient getInstance(
+            SSLSocketFactory socketFactory, X509TrustManager trustManager) {
         if (instance == null) {
-            instance = new OkHttpClient.Builder()
+            OkHttpClient.Builder builder = new OkHttpClient.Builder()
                     .certificatePinner(createCertificatePinner())
-                    .build();
+                    .connectionSpecs(Arrays.asList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS));
+
+            if (socketFactory != null && trustManager != null) {
+                builder.sslSocketFactory(socketFactory, trustManager);
+            }
+
+            instance = builder.build();
         }
+
         return instance;
     }
 

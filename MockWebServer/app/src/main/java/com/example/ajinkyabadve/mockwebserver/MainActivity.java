@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(application.getBaseUrl())
                 .addConverterFactory(MoshiConverterFactory.create())
-                .client(OkHttp.getInstance())
+                .client(OkHttp.getInstance(application.getSSLSocketFactory(), application.getX509TrustManager()))
                 .build();
 
         GitHubService service = retrofit.create(GitHubService.class);
